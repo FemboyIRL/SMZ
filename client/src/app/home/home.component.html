@@ -26,6 +26,7 @@
   <div class="products">
     <div class="products__header">
       <h2>PRODUCTOS NUEVOS!</h2>
+      <button *ngIf="isAdmin" (click)="openAddProductModal()">Agregar Producto</button>
     </div>
     <div *ngIf="loading" class="products__loading">
       <ng-template #indicatorTemplate>
@@ -85,5 +86,55 @@
   </div>
 </div>
 
+<!-- Modal para agregar un producto -->
+<div class="modal" *ngIf="isAddProductModalOpen" (click)="closeAddProductModal()">
+  <div class="modal__content" (click)="$event.stopPropagation()">
+    <h3>Agregar Producto</h3>
+    <form (ngSubmit)="addProduct()">
+      <div class="form-group">
+        <label for="productTitle">Título del Producto</label>
+        <input id="productTitle" [(ngModel)]="newProduct.name" name="name" type="text" required />
+      </div>
+
+      <div class="form-group">
+        <label for="productMainImage">Imagen Principal</label>
+        <input id="productMainImage" type="file" (change)="onMainImageChange($event)" />
+      </div>
+
+      <div class="form-group">
+        <label for="productAdditionalImages">Otras Imágenes</label>
+        <input id="productAdditionalImages" type="file" (change)="onAdditionalImagesChange($event)" multiple />
+      </div>
+      
+      <div class="form-group">
+        <label for="productDescription">Descripción</label>
+        <textarea id="productDescription" [(ngModel)]="newProduct.description" name="description" required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="productPrice">Precio</label>
+        <input id="productPrice" [(ngModel)]="newProduct.price" name="price" type="number" required />
+      </div>
+
+      <div class="form-group">
+        <label for="productPrice">Cantidad</label>
+        <input id="productPrice" [(ngModel)]="newProduct.quantity" name="quantity" type="number" required />
+      </div>
+
+      <div class="form-group">
+        <label for="productCategory">Categoría</label>
+        <select id="productCategory" [(ngModel)]="newProduct.category" name="category" required>
+          <option *ngFor="let c of categories" [value]="c.id">{{ c.title }}</option>
+        </select>
+      </div>
+      
+
+      <div class="modal__buttons">
+        <button type="submit">Agregar Producto</button>
+        <button type="button" (click)="closeAddProductModal()">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>
 
 </div>

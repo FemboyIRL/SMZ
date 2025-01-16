@@ -24,6 +24,8 @@ export class HomeComponent implements OnInit {
   isAdmin: boolean = false;
   isCategoryModalOpen: boolean = false;
   isCategoryDeleteModal: boolean = false;
+  isAddProductModalOpen: boolean = false;
+  newProduct: Product | null = null;
   categoryToDelete: Category | null = null;
   newCategory: string = '';
   loading = false;
@@ -47,6 +49,16 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.newProduct = {
+      id: 0,
+      name: '',
+      category: '',
+      description: '',
+      image: '',
+      price: 0,
+      quantity: 0,
+      images: []
+    };
     this.screenWidth = window.innerWidth;
     this.screenHeight = window.innerHeight;
     this.categoryService.getAllCategories().subscribe(
@@ -86,6 +98,14 @@ export class HomeComponent implements OnInit {
 
   checkIfUserIsAdmin(): void {
     this.isAdmin = this._token.getIsAdmin();
+  }
+
+  openAddProductModal(): void {
+    this.isAddProductModalOpen = true;
+  }
+
+  closeAddProductModal(): void {
+    this.isAddProductModalOpen = false;
   }
 
   openCategoryModal(): void {
@@ -143,8 +163,23 @@ export class HomeComponent implements OnInit {
     );
   }
 
-  addProduct() {
-    console.log("Papuuu");
+  addProduct(): void {
+    console.log(this.newProduct); // Esto es solo para ver el producto en la consola
+
+    if (this.newProduct) {
+      this.productService.createProduct(this.newProduct).subscribe(
+        (res) => {
+          // Respuesta exitosa
+          console.log('Producto creado:', res);
+          // Aquí puedes agregar algún mensaje de éxito o redirigir a otra página
+        },
+        (err) => {
+          // Manejo de errores
+          console.error('Error al crear el producto:', err);
+          // Puedes agregar algún mensaje de error para mostrar al usuario
+        }
+      );
+    }
   }
 
   showMoreProducts(): void {
@@ -163,5 +198,35 @@ export class HomeComponent implements OnInit {
         }
       );
     }, 500);
+  }
+
+  onMainImageChange(event: any): void {
+    const file = event.target.files[0];
+
+    if (file) {
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        this.newProduct!.image = reader.result as string;
+      };
+
+      reader.readAsDataURL(file);
+    }
+  }
+
+  onAdditionalImagesChange(event: any): void {
+    const files = (event.target as HTMLInputElement).files;
+
+    if (files && files.length > 0) {
+      Array.from(files).forEach(file => {
+        const reader = new FileReader();
+
+        reader.onload = () => {
+          this.newProduct!.images.push(reader.result as string);
+        };
+
+        reader.readAsDataURL(file);
+      });
+    }
   }
 }

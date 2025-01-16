@@ -26,12 +26,16 @@
         font-size: 20px;
       }
 
-      input {
+      input, textarea, select {
         width: 100%;
         padding: 10px;
         margin-bottom: 20px;
         border: 1px solid #ccc;
         border-radius: 4px;
+      }
+
+      input[type="file"] {
+        padding: 5px;
       }
 
       .modal__buttons {
@@ -63,7 +67,7 @@
   .categories {
     margin: 0 auto;
     padding: 24px 16px;
-    max-width: calc(350px + 32px); // width of cards + all padding + gap
+    max-width: calc(350px + 32px); 
     &__header {
       display: flex;
       justify-content: space-between;
@@ -207,9 +211,34 @@
       text-align: center;
     }
     &__header {
-      margin-bottom: 16px;
-      > h2 {
-        font-size: 1.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+  
+      h2 {
+        font-size: 24px;
+        color: #333;
+      }
+    }
+  
+    button {
+      background-color: #4CAF50;  // Color de fondo verde
+      color: white;               // Color de texto blanco
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+  
+      &:hover {
+        background-color: #45a049;  // Un tono más oscuro al pasar el cursor
+      }
+  
+      &:disabled {
+        background-color: #cccccc;  // Color gris si está deshabilitado
+        cursor: not-allowed;
       }
     }
     &__list {

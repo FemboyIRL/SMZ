@@ -11,5 +11,5 @@ export interface Product {
   image: String;
   price: Number;
   quantity: Number;
-  images: String;
+  images: String[];
 }
