@@ -26,4 +26,16 @@ export class ProductService {
     console.log(id);
     return this._api.getTypeRequest('products/' + id);
   }
+
+  createProduct(product: Product): Observable<Product> {
+    return this.http.post<Product>(this.url + 'products', product);
+  }
+
+  editProduct(id: number, product: Product): Observable<Product> {
+    return this.http.put<Product>(this.url + 'products/' + id, product);
+  }
+
+  deleteProduct(id: number): Observable<void> {
+    return this.http.delete<void>(this.url + 'products/' + id);
+  }
 }

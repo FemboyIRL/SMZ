@@ -2,6 +2,7 @@
   <div class="categories">
     <div class="categories__header">
       <h2>Categorias</h2>
+      <button *ngIf="isAdmin" (click)="openCategoryModal()">Agregar Categoría</button>
     </div>
     <div class="categories__list">
       <swiper
@@ -9,10 +10,15 @@
         [slidesPerView]="screenWidth > 1200 ? 3 : 1"
         [spaceBetween]="50"
         [pagination]="true"
-        [loop]="true"
+        [loop]="false"
       >
         <ng-template swiperSlide *ngFor="let c of categories">
-          <div class="category-card">{{ c.name }}</div>
+          <div class="category-card" (click)="changeProducts(c)">
+            {{ c.title }}
+            <button class="delete-btn" *ngIf="isAdmin" (click)="openDeleteCategoryModal(c)">
+              Borrar
+            </button>
+          </div>        
         </ng-template>
       </swiper>
     </div>
@@ -55,4 +61,29 @@
       Mostrarme mas..
     </button>
   </div>
+  
+  <div class="modal" *ngIf="isCategoryModalOpen">
+    <div class="modal__content">
+      <h3>Agregar Nueva Categoría</h3>
+      <input type="text" [(ngModel)]="newCategory" placeholder="Nombre de la categoría" />
+      <div class="modal__buttons">
+        <button (click)="saveCategory()">Guardar</button>
+        <button (click)="closeCategoryModal()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+<!-- Modal de confirmación para eliminar categoría -->
+<div class="modal" *ngIf="isCategoryDeleteModal" (click)="closeDeleteCategoryModal()">
+  <div class="modal__content" (click)="$event.stopPropagation()">
+    <h3>Eliminar Categoría</h3>
+    <p>¿Estás seguro de que deseas eliminar la categoría "{{ categoryToDelete?.title }}"?</p>
+    <div class="modal__buttons">
+      <button (click)="deleteCategory()">Eliminar</button>
+      <button (click)="closeDeleteCategoryModal()">Cancelar</button>      
+    </div>
+  </div>
+</div>
+
+
 </div>

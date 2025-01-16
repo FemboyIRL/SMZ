@@ -35,7 +35,7 @@ export class AuthService {
             token: res.token,
           };
           this._token.setToken(res.token);
-          this._token.setUser(res.data[0]);
+          this._token.setUser(res.data);
           console.log(res);
           this.userSubject.next(user);
           return user;

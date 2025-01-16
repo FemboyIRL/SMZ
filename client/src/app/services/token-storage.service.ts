@@ -7,7 +7,7 @@ export class TokenStorageService {
   TOKEN_KEY = 'auth-token';
   USER_KEY = 'auth-user';
 
-  constructor() {}
+  constructor() { }
 
   public getToken(): string {
     return sessionStorage.getItem(this.TOKEN_KEY);
@@ -20,6 +20,11 @@ export class TokenStorageService {
 
   getUser(): any {
     return JSON.parse(sessionStorage.getItem(this.USER_KEY));
+  }
+
+  getIsAdmin(): boolean {
+    const user = this.getUser();
+    return user && user[0].role === 1;
   }
 
   setUser(user): void {
