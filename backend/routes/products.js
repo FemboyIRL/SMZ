@@ -46,55 +46,82 @@ router.get("/:productId", async (req, res) => {
 router.post("/", async (req, res) => {
   const { title, image, images, description, price, quantity, short_desc, cat_id } = req.body;
 
+  // Validar que todos los campos obligatorios estén presentes
   if (!title || !image || !description || !price || !quantity || !short_desc || !cat_id) {
     return res.status(400).json({ error: "All fields are required." });
   }
 
+  // Validar que 'images' sea un arreglo de imágenes en formato JSON
+  let imagesArray = [];
+  if (images) {
+    if (Array.isArray(images)) {
+      imagesArray = images;
+    } else {
+      return res.status(400).json({ error: "The 'images' field must be an array." });
+    }
+  }
+
+  // Consulta SQL para insertar el producto
   const query = `
     INSERT INTO products (title, image, images, description, price, quantity, short_desc, cat_id)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)
   `;
 
+  // Ejecutar la consulta con los datos
   db.query(
     query,
-    [title, image, images, description, price, quantity, short_desc, cat_id],
+    [title, image, JSON.stringify(imagesArray), description, price, quantity, short_desc, cat_id],  // Convertimos 'imagesArray' a JSON string
     (err, result) => {
       if (err) {
         console.error(err);
-        res.status(500).json({ error: "Database error." });
+        return res.status(500).json({ error: "Database error." });
       } else {
-        res.status(201).json({ message: "Product created successfully.", productId: result.insertId });
+        return res.status(201).json({ message: "Product created successfully.", productId: result.insertId });
       }
     }
   );
 });
+
 
 // PUT A PRODUCT
 router.put("/:productId", async (req, res) => {
   const { productId } = req.params;
   const { title, image, images, description, price, quantity, short_desc, cat_id } = req.body;
 
+  // Validar que todos los campos obligatorios estén presentes
   if (!title || !image || !description || !price || !quantity || !short_desc || !cat_id) {
     return res.status(400).json({ error: "All fields are required." });
   }
 
+  // Validar que 'images' sea un arreglo de imágenes
+  let imagesArray = [];
+  if (images) {
+    if (Array.isArray(images)) {
+      imagesArray = images;
+    } else {
+      return res.status(400).json({ error: "The 'images' field must be an array." });
+    }
+  }
+
+  // Consulta SQL para actualizar el producto
   const query = `
     UPDATE products
     SET title = ?, image = ?, images = ?, description = ?, price = ?, quantity = ?, short_desc = ?, cat_id = ?
     WHERE id = ?
   `;
 
+  // Ejecutar la consulta con los datos
   db.query(
     query,
-    [title, image, images, description, price, quantity, short_desc, cat_id, productId],
+    [title, image, JSON.stringify(imagesArray), description, price, quantity, short_desc, cat_id, productId],  // Convertimos 'imagesArray' a JSON string
     (err, result) => {
       if (err) {
         console.error(err);
-        res.status(500).json({ error: "Database error." });
+        return res.status(500).json({ error: "Database error." });
       } else if (result.affectedRows === 0) {
-        res.status(404).json({ error: "Product not found." });
+        return res.status(404).json({ error: "Product not found." });
       } else {
-        res.json({ message: "Product updated successfully." });
+        return res.json({ message: "Product updated successfully." });
       }
     }
   );
