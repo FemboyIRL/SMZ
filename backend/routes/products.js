@@ -42,4 +42,63 @@ router.get("/:productId", async (req, res) => {
   );
 });
 
+// POST A PRODUCT
+router.post("/", async (req, res) => {
+  const { title, image, images, description, price, quantity, short_desc, cat_id } = req.body;
+
+  if (!title || !image || !description || !price || !quantity || !short_desc || !cat_id) {
+    return res.status(400).json({ error: "All fields are required." });
+  }
+
+  const query = `
+    INSERT INTO products (title, image, images, description, price, quantity, short_desc, cat_id)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+  `;
+
+  db.query(
+    query,
+    [title, image, images, description, price, quantity, short_desc, cat_id],
+    (err, result) => {
+      if (err) {
+        console.error(err);
+        res.status(500).json({ error: "Database error." });
+      } else {
+        res.status(201).json({ message: "Product created successfully.", productId: result.insertId });
+      }
+    }
+  );
+});
+
+// PUT A PRODUCT
+router.put("/:productId", async (req, res) => {
+  const { productId } = req.params;
+  const { title, image, images, description, price, quantity, short_desc, cat_id } = req.body;
+
+  if (!title || !image || !description || !price || !quantity || !short_desc || !cat_id) {
+    return res.status(400).json({ error: "All fields are required." });
+  }
+
+  const query = `
+    UPDATE products
+    SET title = ?, image = ?, images = ?, description = ?, price = ?, quantity = ?, short_desc = ?, cat_id = ?
+    WHERE id = ?
+  `;
+
+  db.query(
+    query,
+    [title, image, images, description, price, quantity, short_desc, cat_id, productId],
+    (err, result) => {
+      if (err) {
+        console.error(err);
+        res.status(500).json({ error: "Database error." });
+      } else if (result.affectedRows === 0) {
+        res.status(404).json({ error: "Product not found." });
+      } else {
+        res.json({ message: "Product updated successfully." });
+      }
+    }
+  );
+});
+
+
 module.exports = router;
