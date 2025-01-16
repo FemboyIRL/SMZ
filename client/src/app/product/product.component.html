@@ -46,17 +46,17 @@
         >
       </div>
       <div class="price-container">
-        <h2 class="price">{{ product.price | currency: "USD" }}</h2>
+        <h2 class="price">{{ product.price | currency: " MXN " }}</h2>
         <span
           class="availability"
           [ngStyle]="{ color: quantity > 0 ? 'inherit' : 'red' }"
-          >{{ quantity === 0 ? "Out of stock" : "In stock" }}</span
+          >{{ quantity === 0 ? "Out of stock" : "Stock" }}</span
         >
       </div>
       <div class="description">{{ product.description }}</div>
       <div class="cta">
         <div class="add-to-cart">
-          <span>QTY:</span>
+          <span>Cantidad:</span>
           <nz-input-number
             [(ngModel)]="quantity"
             [nzMin]="product.quantity > 0 ? 1 : 0"
@@ -69,14 +69,14 @@
             (click)="addToCart()"
             [disabled]="quantity === 0"
           >
-            Add to cart
+            Agregar al Carrito
           </button>
         </div>
         <div class="category">
-          <span>Category: </span> {{ product.category }}
+          <span>Categoria: </span> {{ product.category }}
         </div>
         <div class="social-links">
-          <span>Share: </span>
+          <span>Comparte:): </span>
           <i nz-icon nzType="facebook" nzTheme="outline"></i>
           <i nz-icon nzType="twitter" nzTheme="outline"></i>
           <i nz-icon nzType="google-plus" nzTheme="outline"></i>

@@ -64,8 +64,8 @@ export class CartService {
     this.cartData.total = this.getCartTotal();
     this._notification.create(
       'success',
-      'Product added to cart',
-      `${title} was successfully added to the cart`
+      'Producto añadido al carrito',
+      `${title} Se ha añadido con éxito al carrito`
     );
     this.cartDataObs$.next({ ...this.cartData });
     localStorage.setItem('cart', JSON.stringify(this.cartData));
@@ -99,8 +99,8 @@ export class CartService {
 
     this._notification.create(
       'success',
-      'Removed successfully',
-      'The selected item was removed from the cart successfully'
+      'Eliminado con éxito',
+      'El artículo seleccionado se ha eliminado del carrito con éxito'
     );
   }
 

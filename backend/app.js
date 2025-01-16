@@ -5,9 +5,7 @@ const logger = require("morgan");
 const cors = require("cors");
 
 // Config .env file
-dotenv.config({
-  path: path.join(__dirname, `env/${process.env.NODE_ENV}.env`),
-});
+dotenv.config();
 
 // Initialize express app
 const app = express();
@@ -28,7 +26,7 @@ app.get("/", (req, res) => {
 });
 
 const PORT = process.env.PORT || 5000;
-const ENV = process.env.NODE_ENV || null;
+const ENV = 'DEV'
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT} using ${ENV} env.`);

@@ -16,7 +16,7 @@
     </button>
   </div>
   <div class="header-container__middle">
-    <h3 routerLink="/">Eccom</h3>
+    <h3 routerLink="/">SMZ CELL STORE</h3>
   </div>
   <div class="header-container__right">
     <ng-container>
@@ -45,7 +45,7 @@
             class="cart-dropdown__empty"
             *ngIf="cartData.products.length === 0"
           >
-            Your cart is empty.
+            Tu carrito esta vacio:(.
           </div>
           <div
             class="cart-dropdown__content"
@@ -74,7 +74,7 @@
                     <div class="product-name">{{ product.title }}</div>
                     <div class="product-amount">
                       {{ product.quantity }} x
-                      <span>{{ product.price | currency: "USD" }}</span>
+                      <span>{{ product.price | currency: "MXN" }}</span>
                     </div>
                   </div>
                 </div>
@@ -85,7 +85,7 @@
                 {{ cartData.products.length }} Item(s) selected
               </div>
               <div class="total-price">
-                Total: {{ cartData.total | currency: "USD" }}
+                Total: {{ cartData.total | currency: "MXN" }}
               </div>
             </div>
             <div class="cart-cta">
@@ -100,7 +100,7 @@
                   borderBottom: 'none'
                 }"
               >
-                View cart
+                Ver Carrito
               </button>
               <button
                 nz-button
@@ -114,7 +114,7 @@
                   borderBottom: 'none'
                 }"
               >
-                Checkout
+                Pagar
               </button>
             </div>
           </div>
@@ -142,14 +142,14 @@
 <div [className]="isMenuOpen ? 'side-menu show' : 'side-menu'">
   <i nz-icon nzType="close" nzTheme="outline" (click)="toggleMenu()"></i>
   <div class="side-menu__content">
-    <h2 routerLink="/" (click)="toggleMenu()">Eccom</h2>
+    <h2 routerLink="/" (click)="toggleMenu()">SMZ CELL STORE</h2>
     <nav>
       <ul>
-        <li routerLink="/" (click)="toggleMenu()">Home</li>
-        <li routerLink="/cart" (click)="toggleMenu()">Cart</li>
-        <li routerLink="/profile" (click)="toggleMenu()">Profile</li>
+        <li routerLink="/" (click)="toggleMenu()">Inicio</li>
+        <li routerLink="/cart" (click)="toggleMenu()">Carrito</li>
+        <li routerLink="/profile" (click)="toggleMenu()">Cuenta</li>
         <li routerLink="/order-history" (click)="toggleMenu()">
-          Order History
+          Historial de Pedidos
         </li>
       </ul>
     </nav>
@@ -160,7 +160,7 @@
         (click)="toggleMenu()"
         *ngIf="!isLoggedIn"
       >
-        Sign in
+        Iniciar Sesion
       </button>
       <button
         nz-button
@@ -168,10 +168,10 @@
         (click)="toggleMenu()"
         *ngIf="!isLoggedIn"
       >
-        Sign up
+        Registrarse
       </button>
       <button nz-button (click)="logout() && toggleMenu()" *ngIf="isLoggedIn">
-        Sign out
+        Cerrar sesion
       </button>
     </div>
   </div>

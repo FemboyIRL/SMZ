@@ -11,7 +11,8 @@ exports.create_order = async (req, res, next) => {
       res.status(result.statusCode).send({ ...result });
     })
     .catch((err) => {
-      const { statusCode = 400, message } = err;
+      let { statusCode = 400, message } = err;
+      console.log(JSON.stringify(err));
       res.status(statusCode).send({ message }) && next(err);
     });
 };

@@ -21,9 +21,15 @@ export class CheckoutComponent implements OnInit {
   orderId;
 
   constructor(private _auth: AuthService, private _cart: CartService) {
+
+  }
+
+  ngOnInit(): void {
     this._auth.user.subscribe((user) => {
       if (user) {
         this.currentUser = user;
+      console.log("usuario");
+        console.log(this.currentUser);
         this.billingAddress[0].value = user.fname;
         this.billingAddress[1].value = user.email;
       }
@@ -34,13 +40,11 @@ export class CheckoutComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
-
   submitCheckout() {
     this.loading = true;
     setTimeout(() => {
       this._cart
-        .submitCheckout(this.currentUser.user_id, this.cartData)
+        .submitCheckout(this.currentUser.id, this.cartData)
         .subscribe(
           (res: any) => {
             console.log(res);
@@ -97,44 +101,44 @@ export class CheckoutComponent implements OnInit {
 
   billingAddress = [
     {
-      name: 'Full name',
-      placeholder: 'Enter your full name',
+      name: 'Nombre Completo',
+      placeholder: 'Ingresa tu nombre',
       type: 'text',
       value: '',
     },
     {
       name: 'Email',
-      placeholder: 'Enter your email address',
+      placeholder: 'Ingresa tu direccion de correo',
       type: 'email',
       value: '',
     },
     {
-      name: 'Address',
-      placeholder: 'Enter your address',
+      name: 'Dirección',
+      placeholder: 'Ingresa tu domicilio',
       type: 'text',
       value: '',
     },
     {
-      name: 'City',
-      placeholder: 'Enter your city',
+      name: 'Ciudad',
+      placeholder: 'Ingresa la ciudad donde vives',
       type: 'text',
       value: '',
     },
     {
-      name: 'Country',
-      placeholder: 'Enter your country',
+      name: 'Localidad',
+      placeholder: 'Ingresa tu Municipio',
       type: 'text',
       value: '',
     },
     {
-      name: 'ZIP',
-      placeholder: 'Enter your zip code',
+      name: 'Código Postal',
+      placeholder: 'Ingresa tu codigo postal de tu zona',
       type: 'text',
       value: '',
     },
     {
-      name: 'Telephone',
-      placeholder: 'Enter your telephone number',
+      name: 'Numero de Celular',
+      placeholder: '+52 . .',
       type: 'text',
       value: '',
     },

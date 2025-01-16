@@ -1,10 +1,10 @@
 <div class="cart-container">
   <div class="cart-container__empty" *ngIf="cartData.products.length === 0">
-    Your cart is empty.
+    Su carrito esta vacio:(.
   </div>
   <div class="cart-container__list" *ngIf="cartData.products.length > 0">
     <header class="list-header">
-      <h2>Cart</h2>
+      <h2>Carrito</h2>
     </header>
     <div
       class="list-item"
@@ -35,11 +35,11 @@
   <div class="cart-container__total">
     <div class="price">
       <span>
-        <h3>Total amount</h3>
+        <h3>Importe Total</h3>
         <h2>{{ cartData.total | currency: "USD" }}</h2></span
       >
       <span>
-        <h3>Total items</h3>
+        <h3>Total Articulo(s)</h3>
         <h2>{{ cartData.products.length }}</h2>
       </span>
     </div>
@@ -50,9 +50,9 @@
         routerLink="/checkout"
         [disabled]="cartData.products.length === 0"
       >
-        Checkout
+        PAGAR
       </button>
-      <button nz-button routerLink="/">Back to shopping</button>
+      <button nz-button routerLink="/">Seguir Comprando..</button>
     </div>
   </div>
 </div>

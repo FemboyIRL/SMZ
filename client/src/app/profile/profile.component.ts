@@ -11,26 +11,26 @@ import { TokenStorageService } from '../services/token-storage.service';
 export class ProfileComponent implements OnInit {
   user = [
     {
-      key: 'fullName',
-      label: 'Full name',
+      key: 'Nombre',
+      label: 'Nombre completo',
       value: '',
       type: 'text',
     },
     {
-      key: 'email',
-      label: 'Email address',
+      key: 'Correo electronico',
+      label: 'Direccion de correo electronico',
       value: '',
       type: 'email',
     },
     {
-      key: 'password',
-      label: 'Password',
+      key: 'Contraseña',
+      label: 'Ingresa tu contraseña',
       value: '',
       type: 'password',
     },
     {
-      key: 'confirmPassword',
-      label: 'Confirm password',
+      key: 'confirma tu contraseña',
+      label: 'Ingresa de nuevo tu contraseña',
       value: '',
       type: 'password',
     },

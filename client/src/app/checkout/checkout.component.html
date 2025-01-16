@@ -10,7 +10,7 @@
   <!-- FIRST STEP -->
   <div *ngIf="currentStep === 1">
     <div class="billing-container">
-      <h2>Billing Address</h2>
+      <h2>DIRECCIÓN ENTREGA</h2>
       <form>
         <div
           class="input-container"
@@ -30,19 +30,19 @@
       <button
         nz-button
         (click)="submitBilling()"
-        [disabled]="canBillingSubmit()"
+        
       >
-        Continue
+        Continuar
       </button>
     </div>
   </div>
   <!-- SECOND STEP -->
   <div *ngIf="currentStep === 2">
     <div class="payment-container">
-      <h2>Payment Details</h2>
+      <h2>Detalles de Pago</h2>
       <form>
         <div class="input-container">
-          <label for="">Card number</label>
+          <label for="">Numero de tarjeta</label>
           <input
             nz-input
             type="text"
@@ -53,7 +53,7 @@
           />
         </div>
         <div class="input-container">
-          <label for="">Name on card</label>
+          <label for="">Titular</label>
           <input
             nz-input
             type="text"
@@ -65,7 +65,7 @@
         </div>
         <div class="‼️">
           <div class="input-container">
-            <label for="">Expiry date</label>
+            <label for="">Fecha Expiración</label>
             <input
               nz-input
               type="text"
@@ -76,7 +76,7 @@
             />
           </div>
           <div class="input-container">
-            <label for="">Security code</label>
+            <label for="">Codigo Seguridad</label>
             <input
               nz-input
               type="text"
@@ -93,7 +93,7 @@
         [disabled]="!canPaymentSubmit()"
         (click)="submitPayment()"
       >
-        Continue
+        Continuar
       </button>
     </div>
   </div>
@@ -101,12 +101,12 @@
   <div *ngIf="currentStep === 3">
     <div class="summary-container">
       <div class="summary-container__order">
-        <h2>Order Summary</h2>
+        <h2>RESUMEN DE PEDIDO</h2>
         <div class="details">
-          <div><span>Item(s)</span> {{ cartData.products.length }}</div>
-          <div><span>Payment method</span> Credit</div>
+          <div><span>Articulo(s)</span> {{ cartData.products.length }}</div>
+          <div><span>Forma de Pago</span> Credito</div>
           <div>
-            <span>Order total</span> {{ cartData.total | currency: "USD" }}
+            <span>Total del Pedido</span> {{ cartData.total | currency: "USD" }}
           </div>
         </div>
         <button
@@ -115,11 +115,11 @@
           (click)="submitCheckout()"
           [nzLoading]="loading"
         >
-          Place order
+          Realizar Pedido
         </button>
       </div>
       <div class="summary-container__items">
-        <h2>Order Items</h2>
+        <h2>Articulo(s) pedidos</h2>
         <div class="item-list">
           <div class="item-container" *ngFor="let item of cartData.products">
             <div class="item-image">
@@ -129,8 +129,8 @@
               {{ item.title }}
             </div>
             <div class="item-total">
-              {{ item.price | currency: "USD" }} x {{ item.quantity }} =
-              {{ item.quantity * item.price | currency: "USD" }}
+              {{ item.price | currency: "MXN" }} x {{ item.quantity }} =
+              {{ item.quantity * item.price | currency: "MXN" }}
             </div>
           </div>
         </div>
@@ -142,18 +142,18 @@
     <div class="confirmation-container">
       <header>
         <div class="title">
-          <h1>Thank you!</h1>
-          <p>Please check your email for the order confirmation</p>
+          <h1>GRACIAS POR SU COMPRA!</h1>
+          <p>Por favor, compruebe su correo electrónico para ver la confirmación del pedido</p>
         </div>
         <div class="order-id">
-          Order ID: <span>{{ orderId }}</span>
+          Orden ID: <span>{{ orderId }}</span>
         </div>
       </header>
       <button nz-button class="cta-button" routerLink="/">
-        Continue shopping
+        Seguir comprando..
       </button>
       <div class="products-container">
-        <h2>Order Summary</h2>
+        <h2>Resumen del pedido</h2>
         <div class="products-container__list">
           <div class="list-item" *ngFor="let item of products">
             <div class="item-image">
@@ -163,8 +163,8 @@
               {{ item.title }}
             </div>
             <div class="item-total">
-              {{ item.price | currency: "USD" }} x {{ item.quantity }} =
-              {{ item.quantity * item.price | currency: "USD" }}
+              {{ item.price | currency: "MXN" }} x {{ item.quantity }} =
+              {{ item.quantity * item.price | currency: "MXN" }}
             </div>
           </div>
         </div>

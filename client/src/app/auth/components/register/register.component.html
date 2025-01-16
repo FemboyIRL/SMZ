@@ -1,6 +1,6 @@
 <div class="register-container">
   <div class="form-container">
-    <h2>Sign Up to Eccom</h2>
+    <h2>Únete y disfruta de nuestros productos</h2>
     <nz-alert
       *ngIf="errorMessage"
       nzShowIcon
@@ -10,55 +10,55 @@
     ></nz-alert>
     <form #registerForm="ngForm" (ngSubmit)="onSubmit()">
       <div class="input-container">
-        <label for="fullName">Full name</label>
+        <label for="fullName">Nombre Completo</label>
         <input
           nz-input
           type="text"
           name="fullName"
           [(ngModel)]="fullName"
-          placeholder="Enter your full name"
+          placeholder="Ingresa tu nombre completo"
         />
       </div>
       <div class="input-container">
-        <label for="email">Email address</label>
+        <label for="email">Correo Electronico</label>
         <input
           nz-input
           type="email"
           name="email"
           [(ngModel)]="email"
-          placeholder="Enter your email address"
+          placeholder="Ingresa tu direccion de correo"
         />
       </div>
       <div class="🤪">
         <div class="input-container">
-          <label for="password">Password</label>
+          <label for="password">Contraseña</label>
           <input
             nz-input
             type="password"
             name="password"
             [(ngModel)]="password"
-            placeholder="Enter a strong password"
+            placeholder="Ingresa tu contraseña"
           />
         </div>
         <div class="input-container">
-          <label for="confirmPassword">Confirm password</label>
+          <label for="confirmPassword">Confirma tu contraseña</label>
           <input
             nz-input
             type="password"
             name="confirmPassword"
             [(ngModel)]="confirmPassword"
-            placeholder="Repeat your password"
+            placeholder="Ingresa nuevamente tu contraseña"
           />
         </div>
       </div>
       <div class="✅">
         <div class="checkbox-container">
           <input nz-input type="checkbox" />
-          <span>I agree to receive instructional and promotional emails</span>
+          <span>Acepto recibir correos electrónicos instructivos y promocionales</span>
         </div>
         <div class="checkbox-container">
           <input nz-input type="checkbox" />
-          <span> I agree to Eccom's Terms of Use & Privacy Policy</span>
+          <span> Acepto los Términos de uso y la Política de privacidad de SMZ CELL STORE</span>
         </div>
       </div>
       <div class="cta-container">
@@ -69,10 +69,10 @@
           [disabled]="!canSubmit()"
           [nzLoading]="loading"
         >
-          Sign up
+          Unirte
         </button>
         <div>
-          <div><a routerLink="/login">Sign in with an existing user</a></div>
+          <div><a routerLink="/login">Iniciar sesión con un usuario existente</a></div>
         </div>
       </div>
     </form>

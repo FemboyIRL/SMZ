@@ -453,7 +453,7 @@ INSERT INTO `products` (`id`, `title`, `image`, `images`, `description`, `price`
 
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
-  `username` varchar(255) NOT NULL,
+  `username` varchar(255),
   `password` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `fname` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT 'not set',
