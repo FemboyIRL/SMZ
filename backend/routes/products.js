@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../database/db");
+const multerUpload = require("../multer")
 
 // GET ALL PRODUCTS
 router.get("/", async (req, res) => {
@@ -43,88 +44,176 @@ router.get("/:productId", async (req, res) => {
 });
 
 // POST A PRODUCT
-router.post("/", async (req, res) => {
-  const { title, image, images, description, price, quantity, short_desc, cat_id } = req.body;
+router.post("/", multerUpload.fields([{ name: "image" }, { name: "images", maxCount: 10 }]), async (req, res) => {
+  console.log(req.body);
+  console.log(req.files);
 
-  // Validar que todos los campos obligatorios estén presentes
-  if (!title || !image || !description || !price || !quantity || !short_desc || !cat_id) {
-    return res.status(400).json({ error: "All fields are required." });
+  const { name, description, price, quantity, category } = req.body
+
+  if (!name || !description || !price || !quantity || !category) {
+    return res.status(400).json({ error: "All fields are required." })
   }
 
-  // Validar que 'images' sea un arreglo de imágenes en formato JSON
-  let imagesArray = [];
-  if (images) {
-    if (Array.isArray(images)) {
-      imagesArray = images;
-    } else {
-      return res.status(400).json({ error: "The 'images' field must be an array." });
-    }
-  }
+  try {
+    const imagePath = `/uploads/${req.files.image[0].filename}`
+    const imagesArray = req.files.images
+      ? req.files.images.map(file => `/uploads/${file.filename}`)
+      : []
 
-  // Consulta SQL para insertar el producto
-  const query = `
-    INSERT INTO products (title, image, images, description, price, quantity, short_desc, cat_id)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-  `;
+    const short_desc = description.slice(0, 30)
 
-  // Ejecutar la consulta con los datos
-  db.query(
-    query,
-    [title, image, JSON.stringify(imagesArray), description, price, quantity, short_desc, cat_id],  // Convertimos 'imagesArray' a JSON string
-    (err, result) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).json({ error: "Database error." });
-      } else {
-        return res.status(201).json({ message: "Product created successfully.", productId: result.insertId });
+    const query = `
+      INSERT INTO products (title, image, images, description, price, quantity, short_desc, cat_id)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `
+
+    // Ejecutar la consulta con los datos
+    db.query(
+      query,
+      [name, imagePath, JSON.stringify(imagesArray), description, price, quantity, short_desc, category],
+      (err, result) => {
+        if (err) {
+          console.error(err)
+          return res.status(500).json({ error: "Database error." })
+        } else {
+
+          const insertedProduct = {
+            id: result.insertId,
+            name,
+            category,
+            description,
+            image: imagePath,
+            images: imagesArray,
+            price,
+            quantity,
+            short_desc,
+          };
+
+          return res.status(201).json({ message: "Product created successfully.", product: insertedProduct })
+        }
       }
-    }
-  );
-});
+    )
+  } catch (error) {
+    console.error(error)
+    return res.status(500).json({ error: "Server error." })
+  }
+})
 
 
 // PUT A PRODUCT
-router.put("/:productId", async (req, res) => {
-  const { productId } = req.params;
-  const { title, image, images, description, price, quantity, short_desc, cat_id } = req.body;
+router.put("/:id", multerUpload.fields([{ name: "image" }, { name: "images", maxCount: 10 }]), async (req, res) => {
+  const { id } = req.params;
+  const { name, description, price, quantity, category } = req.body;
 
-  // Validar que todos los campos obligatorios estén presentes
-  if (!title || !image || !description || !price || !quantity || !short_desc || !cat_id) {
+  if (!id || isNaN(id)) {
+    return res.status(400).json({ error: "A valid product ID is required." });
+  }
+
+  if (!name || !description || !price || !quantity || !category) {
     return res.status(400).json({ error: "All fields are required." });
   }
 
-  // Validar que 'images' sea un arreglo de imágenes
-  let imagesArray = [];
-  if (images) {
-    if (Array.isArray(images)) {
-      imagesArray = images;
-    } else {
-      return res.status(400).json({ error: "The 'images' field must be an array." });
-    }
-  }
-
-  // Consulta SQL para actualizar el producto
-  const query = `
-    UPDATE products
-    SET title = ?, image = ?, images = ?, description = ?, price = ?, quantity = ?, short_desc = ?, cat_id = ?
-    WHERE id = ?
-  `;
-
-  // Ejecutar la consulta con los datos
-  db.query(
-    query,
-    [title, image, JSON.stringify(imagesArray), description, price, quantity, short_desc, cat_id, productId],  // Convertimos 'imagesArray' a JSON string
-    (err, result) => {
+  try {
+    const checkQuery = `SELECT * FROM products WHERE id = ?`;
+    db.query(checkQuery, [id], (err, result) => {
       if (err) {
         console.error(err);
         return res.status(500).json({ error: "Database error." });
-      } else if (result.affectedRows === 0) {
+      }
+
+      if (result.length === 0) {
         return res.status(404).json({ error: "Product not found." });
+      }
+
+      let imagePath = result[0].image;
+      if (req.files && req.files.image) {
+        imagePath = `/uploads/${req.files.image[0].filename}`;
+      }
+
+      let imagesArray = result[0].images;
+      if (req.files && req.files.images) {
+        imagesArray = req.files.images.map(file => `/uploads/${file.filename}`);
       } else {
-        return res.json({ message: "Product updated successfully." });
+        imagesArray = JSON.parse(imagesArray);
+      }
+
+      const short_desc = description.slice(0, 30);
+
+      const updateQuery = `
+        UPDATE products
+        SET title = ?, image = ?, images = ?, description = ?, price = ?, quantity = ?, short_desc = ?, cat_id = ?
+        WHERE id = ?
+      `;
+
+      db.query(
+        updateQuery,
+        [name, imagePath, JSON.stringify(imagesArray), description, price, quantity, short_desc, category, id],
+        (err, result) => {
+          if (err) {
+            console.error(err);
+            return res.status(500).json({ error: "Database error." });
+          }
+
+          if (result.affectedRows === 0) {
+            return res.status(404).json({ error: "Product not found." });
+          }
+
+          return res.status(200).json({
+            message: "Product updated successfully.",
+            product: {
+              id,
+              name,
+              category,
+              description,
+              image: imagePath,
+              images: imagesArray,
+              price,
+              quantity,
+              short_desc,
+            },
+          });
+        }
+      );
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Server error." });
+  }
+});
+
+
+router.delete("/:id", (req, res) => {
+  const { id } = req.params
+
+  if (!id || isNaN(id)) {
+    return res.status(400).json({
+      message: "A valid product ID is required",
+      statusCode: 400
+    })
+  }
+
+  db.query(
+    `DELETE FROM products WHERE id = ?`,
+    [id],
+    (err, result) => {
+      if (err) {
+        return res.status(500).json({
+          message: err.message || "Database error",
+          statusCode: 500
+        })
+      } else if (result.affectedRows === 0) {
+        return res.status(404).json({
+          message: "Product not found",
+          statusCode: 404
+        })
+      } else {
+        return res.status(200).json({
+          message: `Product with ID ${id} deleted successfully`,
+          statusCode: 200
+        })
       }
     }
-  );
+  )
 });
 
 

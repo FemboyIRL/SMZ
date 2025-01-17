@@ -1,6 +1,6 @@
 <div class="product-card">
   <div class="product-card__image" routerLink="/product/{{ id }}">
-    <img src="{{ image }}" alt="" />
+    <img [src]="baseUrl + image" alt="{{ title }}" />
   </div>
   <div class="product-card__info">
     <header>
@@ -27,5 +27,12 @@
     >
       {{ quantity === 0 ? "Out of stock" : "Add to cart" }}
     </button>
+    <div class="product-buttons" *ngIf="isAdmin">
+       <!-- Botón para editar -->
+    <button nz-button (click)="editProduct()" class="edit-btn">Edit</button>
+
+    <!-- Botón para borrar -->
+    <button nz-button (click)="deleteProduct()" class="delete-btn">Delete</button>
+    </div>
   </div>
 </div>

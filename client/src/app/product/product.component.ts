@@ -42,11 +42,13 @@ export class ProductComponent implements OnInit {
   showcaseImages: any[] = [];
   loading = false;
 
+  baseUrl: string = 'http://localhost:5000';
+
   constructor(
     private _route: ActivatedRoute,
     private _product: ProductService,
     private _cart: CartService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loading = true;

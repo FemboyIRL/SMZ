@@ -11,7 +11,7 @@ import { ApiService } from './api.service';
 export class ProductService {
   private url = environment.apiUrl;
 
-  constructor(private http: HttpClient, private _api: ApiService) {}
+  constructor(private http: HttpClient, private _api: ApiService) { }
 
   getAllProducts(limitOfResults = 9, page): Observable<Products> {
     return this.http.get<Products>(this.url + 'products', {
@@ -27,8 +27,8 @@ export class ProductService {
     return this._api.getTypeRequest('products/' + id);
   }
 
-  createProduct(product: Product): Observable<Product> {
-    return this.http.post<Product>(this.url + 'products', product);
+  createProduct(product: FormData): Observable<any> {
+    return this.http.post<any>(this.url + 'products', product);
   }
 
   editProduct(id: number, product: Product): Observable<Product> {

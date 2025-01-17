@@ -80,4 +80,4 @@ registerLocaleData(en);
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

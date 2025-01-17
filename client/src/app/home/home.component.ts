@@ -31,6 +31,8 @@ export class HomeComponent implements OnInit {
   loading = false;
   productPageCounter = 1;
   additionalLoading = false;
+  isProductDeleteModal: boolean = false;
+  productToDelete: Product | null = null;
 
   constructor(
     private productService: ProductService,
@@ -54,7 +56,7 @@ export class HomeComponent implements OnInit {
       name: '',
       category: '',
       description: '',
-      image: '',
+      image: null,
       price: 0,
       quantity: 0,
       images: []
@@ -126,6 +128,16 @@ export class HomeComponent implements OnInit {
     this.categoryToDelete = null;
   }
 
+  openDeleteProductModal(product: Product): void {
+    console.log(product)
+    this.productToDelete = product;
+    this.isProductDeleteModal = true;
+  }
+
+  closeDeleteProductModal(): void {
+    this.isProductDeleteModal = false;
+  }
+
   deleteCategory(): void {
     if (this.categoryToDelete) {
       this.categoryService.deleteCategory(this.categoryToDelete.id).subscribe(
@@ -142,6 +154,26 @@ export class HomeComponent implements OnInit {
       );
     }
   }
+
+  deleteProduct(): void {
+    if (this.productToDelete) {
+      this.productService.deleteProduct(this.productToDelete.id).subscribe(
+        (res) => {
+          console.log('Producto eliminado:', res);
+
+          this.products = this.products.filter(
+            (product) => product.id !== this.productToDelete.id
+          );
+
+          this.isProductDeleteModal = false;
+        },
+        (err) => {
+          console.error('Error al eliminar el producto', err);
+        }
+      );
+    }
+  }
+
 
   saveCategory(): void {
     if (this.newCategory.trim() === '') {
@@ -164,19 +196,39 @@ export class HomeComponent implements OnInit {
   }
 
   addProduct(): void {
-    console.log(this.newProduct); // Esto es solo para ver el producto en la consola
+    console.log(this.newProduct.description);
 
     if (this.newProduct) {
-      this.productService.createProduct(this.newProduct).subscribe(
+      const formData = new FormData();
+
+      // Agregar datos básicos
+      formData.append('id', this.newProduct.id.toString());
+      formData.append('name', this.newProduct.name);
+      formData.append('category', this.newProduct.category);
+      formData.append('description', this.newProduct.description);
+      formData.append('price', this.newProduct.price.toString());
+      formData.append('quantity', this.newProduct.quantity.toString());
+
+      // Agregar la imagen principal
+      if (this.newProduct.image) {
+        formData.append('image', this.newProduct.image);
+      }
+
+      // Agregar imágenes adicionales
+      if (this.newProduct.images && this.newProduct.images.length > 0) {
+        for (const image of this.newProduct.images) {
+          formData.append('images', image);
+        }
+      }
+
+      console.log(formData)
+
+      this.productService.createProduct(formData).subscribe(
         (res) => {
-          // Respuesta exitosa
-          console.log('Producto creado:', res);
-          // Aquí puedes agregar algún mensaje de éxito o redirigir a otra página
+          this.products.push(res.product);
         },
         (err) => {
-          // Manejo de errores
           console.error('Error al crear el producto:', err);
-          // Puedes agregar algún mensaje de error para mostrar al usuario
         }
       );
     }
@@ -202,31 +254,17 @@ export class HomeComponent implements OnInit {
 
   onMainImageChange(event: any): void {
     const file = event.target.files[0];
-
     if (file) {
-      const reader = new FileReader();
-
-      reader.onload = () => {
-        this.newProduct!.image = reader.result as string;
-      };
-
-      reader.readAsDataURL(file);
+      this.newProduct.image = file;
     }
   }
 
   onAdditionalImagesChange(event: any): void {
-    const files = (event.target as HTMLInputElement).files;
-
+    const files = event.target.files;
     if (files && files.length > 0) {
-      Array.from(files).forEach(file => {
-        const reader = new FileReader();
-
-        reader.onload = () => {
-          this.newProduct!.images.push(reader.result as string);
-        };
-
-        reader.readAsDataURL(file);
-      });
+      this.newProduct.images = Array.from(files);
     }
   }
+
+
 }

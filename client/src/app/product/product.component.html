@@ -10,7 +10,7 @@
         *ngIf="showcaseImages.length === 0"
       >
         <ng-template swiperSlide [zoom]="true">
-          <img src="{{ product.image }}" alt="`Product image`" />
+          <img [src]="baseUrl + product.image" alt="Product image" />
         </ng-template>
       </swiper>
       <!-- Multiple images -->
@@ -26,7 +26,7 @@
           [zoom]="true"
           *ngFor="let image of showcaseImages; index as i"
         >
-          <img src="{{ image }}" alt="`Product image`" />
+        <img [src]="baseUrl + image" alt="`Product image`" />
         </ng-template>
       </swiper>
     </div>

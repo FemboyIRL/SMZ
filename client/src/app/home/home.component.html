@@ -49,6 +49,8 @@
         [category]="n.category"
         [quantity]="n.quantity"
         [onAdd]="cartService.addProduct.bind(cartService)"
+        (onEdit)="openEditProductModal(n)"
+        (onDelete)="openDeleteProductModal(n)"
       >
       </app-product-card>
     </div>
@@ -85,6 +87,18 @@
     </div>
   </div>
 </div>
+
+<div class="modal" *ngIf="isProductDeleteModal" (click)="closeDeleteProductModal()">
+  <div class="modal__content" (click)="$event.stopPropagation()">
+    <h3>Eliminar Producto</h3>
+    <p>¿Estás seguro de que deseas eliminar el producto "{{ productToDelete?.title }}"?</p>
+    <div class="modal__buttons">
+      <button (click)="deleteProduct()">Eliminar</button>
+      <button (click)="closeDeleteProductModal()">Cancelar</button>      
+    </div>
+  </div>
+</div>
+
 
 <!-- Modal para agregar un producto -->
 <div class="modal" *ngIf="isAddProductModalOpen" (click)="closeAddProductModal()">
