@@ -151,4 +151,54 @@
   </div>
 </div>
 
+<!-- Modal para editar un producto -->
+<!-- Modal para editar un producto -->
+<div class="modal" *ngIf="isEditProductModalOpen" (click)="closeEditProductModal()">
+  <div class="modal__content" (click)="$event.stopPropagation()">
+    <h3>Editar Producto</h3>
+    <form (ngSubmit)="editProduct()">
+      <div class="form-group">
+        <label for="productTitle">Título del Producto</label>
+        <input id="productTitle" [(ngModel)]="editedProduct.name" name="name" type="text" required />
+      </div>
+
+      <div class="form-group">
+        <label for="productMainImage">Imagen Principal</label>
+        <input id="productMainImage" type="file" (change)="onMainImageChange($event)" />
+      </div>
+
+      <div class="form-group">
+        <label for="productAdditionalImages">Otras Imágenes</label>
+        <input id="productAdditionalImages" type="file" (change)="onAdditionalImagesChange($event)" multiple />
+      </div>
+
+      <div class="form-group">
+        <label for="productDescription">Descripción</label>
+        <textarea id="productDescription" [(ngModel)]="editedProduct.description" name="description" required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="productPrice">Precio</label>
+        <input id="productPrice" [(ngModel)]="editedProduct.price" name="price" type="number" required />
+      </div>
+
+      <div class="form-group">
+        <label for="productQuantity">Cantidad</label>
+        <input id="productQuantity" [(ngModel)]="editedProduct.quantity" name="quantity" type="number" required />
+      </div>
+
+      <div class="form-group">
+        <label for="productCategory">Categoría</label>
+        <select id="productCategory" [(ngModel)]="editedProduct.category" name="category" required>
+          <option *ngFor="let c of categories" [value]="c.id">{{ c.title }}</option>
+        </select>
+      </div>
+
+      <div class="modal__buttons">
+        <button type="submit">Actualizar Producto</button>
+        <button type="button" (click)="closeEditProductModal()">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>
 </div>

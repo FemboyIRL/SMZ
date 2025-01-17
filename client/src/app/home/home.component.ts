@@ -33,6 +33,8 @@ export class HomeComponent implements OnInit {
   additionalLoading = false;
   isProductDeleteModal: boolean = false;
   productToDelete: Product | null = null;
+  editedProduct: Product | null = null;
+  isEditProductModalOpen: boolean = false;
 
   constructor(
     private productService: ProductService,
@@ -94,7 +96,16 @@ export class HomeComponent implements OnInit {
   changeProducts(category: Category): void {
     this.loading = true;
     setTimeout(() => {
-
+      this.productService.getAllProductsFromCategory(category.id, 9, this.productPageCounter).subscribe(
+        (response) => {
+          this.products = response.products;
+          this.loading = false;
+          console.log(this.products);
+        },
+        (error) => {
+          console.error("Error loading products", error);
+        }
+      );
     })
   }
 
@@ -136,6 +147,38 @@ export class HomeComponent implements OnInit {
 
   closeDeleteProductModal(): void {
     this.isProductDeleteModal = false;
+  }
+
+  openEditProductModal(product: any) {
+    console.log(product)
+    this.editedProduct = { ...product };
+    this.isEditProductModalOpen = true;
+  }
+
+  closeEditProductModal() {
+    this.isEditProductModalOpen = false;
+  }
+
+  editProduct() {
+    if (!this.editedProduct.name || !this.editedProduct.description || !this.editedProduct.price || !this.editedProduct.quantity || !this.editedProduct.category) {
+      alert('Todos los campos son obligatorios');
+      return;
+    }
+
+    this.productService.editProduct(this.editedProduct.id, this.editedProduct).subscribe(
+      (response) => {
+        console.log('Producto actualizado correctamente', response);
+        this.products.push(response.product);
+        this.products = this.products.filter(
+          (product) => product.id !== this.editedProduct.id
+        );
+        this.closeEditProductModal();
+      },
+      (error) => {
+        console.error('Error al actualizar el producto', error);
+        alert('Hubo un error al actualizar el producto');
+      }
+    );
   }
 
   deleteCategory(): void {
@@ -226,6 +269,7 @@ export class HomeComponent implements OnInit {
       this.productService.createProduct(formData).subscribe(
         (res) => {
           this.products.push(res.product);
+          this.closeAddProductModal()
         },
         (err) => {
           console.error('Error al crear el producto:', err);

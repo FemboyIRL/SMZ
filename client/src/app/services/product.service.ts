@@ -22,6 +22,15 @@ export class ProductService {
     });
   }
 
+  getAllProductsFromCategory(categoryId: number, limitOfResults = 9, page): Observable<Products> {
+    return this.http.get<Products>(this.url + 'products/category/' + categoryId, {
+      params: {
+        limit: limitOfResults.toString(),
+        page: page,
+      },
+    });
+  }
+
   getSingleProduct(id: Number): Observable<any> {
     console.log(id);
     return this._api.getTypeRequest('products/' + id);
@@ -31,7 +40,7 @@ export class ProductService {
     return this.http.post<any>(this.url + 'products', product);
   }
 
-  editProduct(id: number, product: Product): Observable<Product> {
+  editProduct(id: number, product: Product): Observable<any> {
     return this.http.put<Product>(this.url + 'products/' + id, product);
   }
 

@@ -2,6 +2,9 @@ const express = require("express");
 const router = express.Router();
 const db = require("../database/db");
 const multerUpload = require("../multer")
+const productController = require("../controllers/productsController")
+
+router.get("/category/:categoryId", productController.getAllProductsFromCategory);
 
 // GET ALL PRODUCTS
 router.get("/", async (req, res) => {

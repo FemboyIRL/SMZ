@@ -68,8 +68,16 @@ export class ProductComponent implements OnInit {
           else this.quantity = 1;
 
           if (product.images) {
-            this.showcaseImages = product.images.split(';');
+            try {
+              this.showcaseImages = JSON.parse(product.images);
+            } catch (e) {
+              console.error('Error al parsear las imágenes del producto:', e);
+              this.showcaseImages = [];
+            }
+          } else {
+            this.showcaseImages = [];
           }
+
           this.loading = false;
         });
       });
@@ -80,7 +88,7 @@ export class ProductComponent implements OnInit {
       id: this.id,
       price: this.product.price,
       quantity: this.quantity,
-      image: this.product.image,
+      image: this.baseUrl + this.product.image,
       title: this.product.title,
       maxQuantity: this.product.quantity,
     });
